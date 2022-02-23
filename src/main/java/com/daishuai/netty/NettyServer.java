@@ -6,7 +6,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.AttributeKey;
@@ -143,9 +142,9 @@ public class NettyServer {
          *  mark和reset方法
          *
          * 17、ByteBuf分类
-         *  Pooled和Unpooled
+         *  Pooled（预先分配好的内存中分配）和Unpooled（直接调用系统接口分配）
          *  Unsafe和非Unsafe
-         *  Heap和Direct
+         *  Heap（在堆上进行分配的）和Direct（Jdk底层接口分配 ）
          *
          * 18、ByteBufAllocator分析
          *  ByteBufAllocator功能
@@ -155,6 +154,28 @@ public class NettyServer {
          *      PooledByteBufAllocator
          *          -> 拿到线程局部缓存PoolThreadCache
          *          -> 在线程局部缓存的Area上进行内存分配
+         *              -> directArena分配direct内存的流程
+         *              -> 从缓存上进行内存分配
+         *              -> 从内存堆里面进行内存分配
+         * 19、内存规格介绍
+         *  tiny     0-512B
+         *  small    512B-8K
+         *  normal   8K-16M
+         *  huge     >16M
+         *  16M    Chunk（内存是以Chunk为单位向操作系统共申请）
+         *  8K     Page（以Page为单位对Chunk进行切分）
+         *  0-8K   SubPage（以SubPage对Page进行切分）
+         *
+         * 20、命中缓存的分配逻辑
+         *  MemoryRegionCache   queue, sizeClass, size
+         *  tiny[32]: queue中大小是16B的整数倍
+         *  small[4]:  512B 1K 2K 4K
+         *  normal[3]: 8K 16K 32K
+         *
+         * 21、命中缓存的分配流程
+         *  找到对应size的MemoryRegionCache
+         *  从queue中弹出一个entry给ByteBuf初始化
+         *  将弹出的entry扔到对象池进行复用
          */
 
 
