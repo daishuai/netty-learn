@@ -112,6 +112,49 @@ public class NettyServer {
          *  创建节点并添加至链表
          *  回调添加完成事件
          *
+         * 11、删除ChannelHandler
+         *  找到节点
+         *  链表的删除
+         *  回调删除Handler事件
+         *
+         * 12、inBound事件的传播  Head -> Tail
+         *  何为inBound事件一级ChannelInBoundHandler
+         *  ChannelRead事件的传播
+         *  SimpleInBoundHandler处理器
+         *
+         * 13、outBound事件的传播 Tail -> Head
+         *  何为outBound事件以及ChannelOutBoundHandler
+         *  write()事件的传播
+         *
+         * 14、异常的传播 发生异常的节点 -> Tail
+         *  异常的触发链
+         *  异常处理的最佳实践
+         *      在Pipeline最后添加一个全局异常处理节点
+         *
+         * 15、ByteBuf
+         *  内存的类别有哪些
+         *  如何减少多线程内存分配之间的竞争
+         *  不同大小内存是如何进行分配的
+         *
+         * 16、ByteBuf结构以及重要的API
+         *  ByteBuf结构
+         *      0 <= readerIndex <= writerIndex <= capacity
+         *  read, write, set方法
+         *  mark和reset方法
+         *
+         * 17、ByteBuf分类
+         *  Pooled和Unpooled
+         *  Unsafe和非Unsafe
+         *  Heap和Direct
+         *
+         * 18、ByteBufAllocator分析
+         *  ByteBufAllocator功能
+         *  AbstractByteBufAllocator
+         *  ByteBufAllocator两大子类
+         *      UnpooledByteBufAllocator
+         *      PooledByteBufAllocator
+         *          -> 拿到线程局部缓存PoolThreadCache
+         *          -> 在线程局部缓存的Area上进行内存分配
          */
 
 
