@@ -176,6 +176,26 @@ public class NettyServer {
          *  找到对应size的MemoryRegionCache
          *  从queue中弹出一个entry给ByteBuf初始化
          *  将弹出的entry扔到对象池进行复用
+         *
+         * 22、page级别的内存分配：allocateNormal()
+         *  尝试在现有的chunk上分配
+         *  创建一个chunk进行分配
+         *  初始化PooledByteBuf
+         *
+         * 23、subPage级别的内存分配：allocateTiny()
+         *   定位一个SubPage对象
+         *   初始化SubPage
+         *   初始化PooledByteBuf
+         *
+         * 24、ByteBuf的释放
+         *  连续的内存区段加到缓存
+         *  标记连续的内存区段为未使用
+         *  ByteBuf加到对象池
+         *
+         * 25、ByteToMessageDecoder解码器
+         *  累加字节流
+         *  调用子类的decode方法进行解析
+         *  将解析到的ByteBuf向下传播
          */
 
 
